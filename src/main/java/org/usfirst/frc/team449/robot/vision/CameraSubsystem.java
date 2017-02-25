@@ -3,6 +3,8 @@ package org.usfirst.frc.team449.robot.vision;
 import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 //import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
 
 import maps.org.usfirst.frc.team449.robot.components.UsbCameraMap;
 import maps.org.usfirst.frc.team449.robot.vision.CameraMap;
@@ -47,8 +49,11 @@ public class CameraSubsystem extends MappedSubsystem {
         //Searches for each camera, then places them into camera list.
         for (UsbCameraMap.UsbCamera camera : map.getUSBCameraList()) {
             UsbCamera tmp = new UsbCamera(camera.getName(), camera.getDev());
+            CvSink tmpSink = new CvSink("CvSink_"+camera.getName());
             tmp.setResolution(camera.getWidth(), camera.getHeight());
             tmp.setFPS(camera.getFps());
+            tmpSink.setSource(tmp);
+            tmpSink.setEnabled(true);
 	        System.out.println("Added "+camera.getName()+" to camera list.");
 	        cameras.add(tmp);
         }
