@@ -156,8 +156,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	public OI2017ArcadeGamepad(OI2017ArcadeGamepadMap.OI2017ArcadeGamepad map) {
 		//Instantiate stick and joysticks
 		gamepad = new Joystick(map.getGamepad());
-		rotThrottle = new SmoothedThrottle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
-		fwdThrottle = new SmoothedThrottle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
+		rotThrottle = new Throttle(gamepad, map.getGamepadLeftAxis(), map.getInvertRot());
+		fwdThrottle = new Throttle(gamepad, map.getGamepadRightAxis(), map.getInvertFwd());
 
 		//Set up other map constants
 		SHIFT = (map.getInvertDpad() ? -map.getDpadShift() : map.getDpadShift());
