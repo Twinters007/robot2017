@@ -1,8 +1,10 @@
 package org.usfirst.frc.team449.robot;
 
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
@@ -76,6 +78,7 @@ public class Robot extends IterativeRobot {
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
+		/*
 		System.out.println("Started robotInit.");
 
 		try {
@@ -140,6 +143,7 @@ public class Robot extends IterativeRobot {
 			compressor.setClosedLoopControl(true);
 			compressor.start();
 		}
+		*/
 	}
 
 	/**
@@ -147,6 +151,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopInit() {
+		/*
 		//Stop the drive for safety reasons
 		driveSubsystem.setVBusThrottle(0, 0);
 
@@ -163,6 +168,7 @@ public class Robot extends IterativeRobot {
 		}
 
 //		Scheduler.getInstance().add(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+		*/
 	}
 
 	/**
@@ -170,8 +176,17 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() {
+		NetworkTable.getTable("SmartDashboard").getSubTable("drive").getSubTable("navx").putNumber("yaw", System.currentTimeMillis());
+		NetworkTable.getTable("SmartDashboard").putNumber("time_running", DriverStation.getInstance().getMatchTime());
+		/*
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
+		*/
+	}
+
+	@Override
+	public void disabledInit() {
+		NetworkTable.getTable("SmartDashboard").putNumber("time_running", 0);
 	}
 
 	/**
@@ -179,6 +194,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		/*
 		//Set throttle to 0 for safety reasons
 		if (driveSubsystem.shifter != null) {
 			Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
@@ -188,6 +204,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setVBusThrottle(0, 0);
 		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 //		Scheduler.getInstance().add(new ExecuteProfile(driveSubsystem));
+		*/
 	}
 
 	/**
@@ -195,8 +212,10 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		/*
 		//Run all commands. This is a WPILib thing you don't really have to worry about.
 		Scheduler.getInstance().run();
 		SmartDashboard.putNumber("Heading", driveSubsystem.getGyroOutput());
+		*/
 	}
 }
