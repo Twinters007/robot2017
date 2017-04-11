@@ -13,13 +13,21 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+# IntelliJ files
 .idea/
 *.idea
 gen/
 classes/
 out/
+build
+*build
+*.iml
+*.ipr
+*.iws
 
-# GradleRIO files
-robot2017.iml
-robot2017.ipr
-robot2017.iws
+# R files
+.RData
+.Rhistory
+
+# Generated profiles.
+*Profile.csv
