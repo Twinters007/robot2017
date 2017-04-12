@@ -11,7 +11,7 @@ public class ActiveGearSubsystem extends MappedSubsystem {
 	/**
 	 * Piston for pushing gears
 	 */
-	private DoubleSolenoid piston;
+	public DoubleSolenoid piston;
 	/**
 	 * Whether piston is currently contracted
 	 */
