@@ -46,6 +46,18 @@ public class DashboardManager extends Command {
 	@Override
 	protected void execute() {
 		dashTable.putNumber("time_left", DriverStation.getInstance().getMatchTime());
+		dashTable.putNumber("heading", 12);
+		dashTable.putBoolean("climber_on", System.currentTimeMillis() % 2 == 0);
+		dashTable.putBoolean("feeder_on", System.currentTimeMillis() % 2 != 0);
+		dashTable.putBoolean("shooter_on", System.currentTimeMillis() % 2 == 0);
+		dashTable.putBoolean("highgear_on", System.currentTimeMillis() % 2 != 0);
+		dashTable.putNumber("left_vel", 0.24);
+		dashTable.putNumber("right_vel", -0.24);
+		dashTable.putBoolean("gHandler_fired", System.currentTimeMillis() % 2 != 0);
+		dashTable.putNumber("battery_voltage", DriverStation.getInstance().getBatteryVoltage());
+
+		/*
+		dashTable.putNumber("time_left", DriverStation.getInstance().getMatchTime());
 		dashTable.putNumber("heading", drive.getGyroOutput());
 		dashTable.putBoolean("climber_on", climber.canTalonSRX.getPower() != 0);
 		dashTable.putBoolean("feeder_on", feeder.running);
@@ -54,6 +66,8 @@ public class DashboardManager extends Command {
 		dashTable.putNumber("left_vel", drive.leftMaster.getSpeed() / drive.leftMaster.getMaxSpeed());
 		dashTable.putNumber("right_vel", drive.rightMaster.getSpeed() / drive.rightMaster.getMaxSpeed());
 		dashTable.putBoolean("gHandler_fired", gHandler.piston.get() == DoubleSolenoid.Value.kReverse);
+		dashTable.putNumber("battery_voltage", DriverStation.getInstance().getBatteryVoltage());
+		*/
 	}
 
 	@Override

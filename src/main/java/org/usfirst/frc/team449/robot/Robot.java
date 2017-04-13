@@ -127,7 +127,9 @@ public class Robot extends IterativeRobot {
 			//Try to construct map from the cfg file
 			//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig
 			// ("/home/lvuser/449_resources/balbasaur_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+//					Robot2017Map.Robot2017.newBuilder());
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/nt_test.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -140,12 +142,12 @@ public class Robot extends IterativeRobot {
 		}
 
 		//Construct the OI (has to be done first because other subsystems take the OI as an argument.)
-		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
-		System.out.println("Constructed OI");
+//		oiSubsystem = new OI2017ArcadeGamepad(cfg.getArcadeOi());
+//		System.out.println("Constructed OI");
 
 		//Construct the drive (not in a if block because you kind of need it.)
-		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
-		System.out.println("Constructed Drive");
+//		driveSubsystem = new TalonClusterDrive(cfg.getDrive(), oiSubsystem);
+//		System.out.println("Constructed Drive");
 
 		//Construct camera if it's in the map.
 		if (cfg.hasCamera()) {
@@ -201,7 +203,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("positon: " + position);
 
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
-		oiSubsystem.mapButtons();
+//		oiSubsystem.mapButtons();
 		System.out.println("Mapped buttons");
 
 		//Activate the compressor if its module number is in the map.
@@ -213,6 +215,7 @@ public class Robot extends IterativeRobot {
 			System.out.println(compressor.enabled());
 		}
 
+		/*
 		if (cfg.getDoMP()) {
 			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
 			timeToPushGear = (long) (cfg.getTimeToPushGear() * 1000);
@@ -245,6 +248,7 @@ public class Robot extends IterativeRobot {
 			commandFinished = false;
 			completedCommands = 0;
 		}
+		*/
 
 		Scheduler.getInstance().add(new DashboardManager(climberSubsystem, feederSubsystem,
 				singleFlywheelShooterSubsystem, driveSubsystem, gearSubsystem));
@@ -259,24 +263,24 @@ public class Robot extends IterativeRobot {
 		if (MPNotifier != null) {
 			MPNotifier.stop();
 		}
-		driveSubsystem.setVBusThrottle(0, 0);
-		driveSubsystem.overrideNavX = !cfg.getArcadeOi().getOverrideNavXWhileHeld();
-
-		driveSubsystem.leftMaster.canTalon.enable();
-		driveSubsystem.rightMaster.canTalon.enable();
-
-		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem,
-				oiSubsystem));
+//		driveSubsystem.setVBusThrottle(0, 0);
+//		driveSubsystem.overrideNavX = !cfg.getArcadeOi().getOverrideNavXWhileHeld();
+//
+//		driveSubsystem.leftMaster.canTalon.enable();
+//		driveSubsystem.rightMaster.canTalon.enable();
+//
+//		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem,
+//				oiSubsystem));
 
 		//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
-		if (driveSubsystem.shifter != null) {
-			if (cfg.getStartLowGear()) {
-				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
-			} else {
-				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
-			}
-		}
+//		if (driveSubsystem.shifter != null) {
+//			if (cfg.getStartLowGear()) {
+//				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
+//			} else {
+//				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
+//			}
+//		}
 
 		if (intakeSubsystem != null) {
 			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
@@ -433,7 +437,7 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void disabledInit() {
-		driveSubsystem.setVBusThrottle(0, 0);
+//		driveSubsystem.setVBusThrottle(0, 0);
 	}
 
 	private void loadProfile(String name) {
