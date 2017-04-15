@@ -1,6 +1,10 @@
 package org.usfirst.frc.team449.robot;
 
-import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import maps.org.usfirst.frc.team449.robot.Robot2017Map;
@@ -8,7 +12,12 @@ import maps.org.usfirst.frc.team449.robot.components.MotionProfileMap;
 import org.usfirst.frc.team449.robot.components.MappedDigitalInput;
 import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.talonCluster.TalonClusterDrive;
-import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DriveAtSpeed;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToHighGear;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MPLoader;
 import org.usfirst.frc.team449.robot.drive.talonCluster.util.MotionProfileData;
 import org.usfirst.frc.team449.robot.mechanism.activegear.ActiveGearSubsystem;
@@ -23,6 +32,7 @@ import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.Ac
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 import org.usfirst.frc.team449.robot.vision.CameraSubsystem;
+import org.usfirst.frc.team449.robot.vision.auto.AutoVision;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,17 +63,17 @@ public class Robot extends IterativeRobot {
 	public static Intake2017 intakeSubsystem;
 
 	/**
-	 *The climber
+	 * The climber
 	 */
 	public static ClimberSubsystem climberSubsystem;
 
 	/**
-	 *The pneumatics (maybe doesn't work?)
+	 * The pneumatics (maybe doesn't work?)
 	 */
 	public static PneumaticsSubsystem pneumaticsSubsystem;
 
 	/**
-	 *The drive
+	 * The drive
 	 */
 	public static TalonClusterDrive driveSubsystem;
 
@@ -86,7 +96,7 @@ public class Robot extends IterativeRobot {
 
 	/**
 	 * The object constructed directly from map.cfg.
-	 * */
+	 */
 	private static Robot2017Map.Robot2017 cfg;
 
 	public static boolean commandFinished = false;
@@ -111,11 +121,14 @@ public class Robot extends IterativeRobot {
 	 * The method that runs when the robot is turned on. Initializes all subsystems from the map.
 	 */
 	public void robotInit() {
+		AutoVision.getOffsets();
+
 		System.out.println("Started robotInit.");
 
 		try {
 			//Try to construct map from the cfg file
-//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			//			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig
+			// ("/home/lvuser/449_resources/balbasaur_map.cfg",
 			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
@@ -168,26 +181,26 @@ public class Robot extends IterativeRobot {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
 		}
 
-		if(cfg.hasGear()){
+		if (cfg.hasGear()) {
 			gearSubsystem = new ActiveGearSubsystem(cfg.getGear());
 		}
 
-		if(cfg.hasBlueRed()){
+		if (cfg.hasBlueRed()) {
 			redAlliance = new MappedDigitalInput(cfg.getBlueRed()).getStatus().get(0);
 			dropGear = new MappedDigitalInput(cfg.getDropGear()).getStatus().get(0);
 			List<Boolean> tmp = new MappedDigitalInput(cfg.getLocation()).getStatus();
-			if (!tmp.get(0) && !tmp.get(1)){
+			if (!tmp.get(0) && !tmp.get(1)) {
 				position = "center";
-			} else if (tmp.get(0)){
+			} else if (tmp.get(0)) {
 				position = "left";
 			} else {
 				position = "right";
 			}
 		}
 
-		System.out.println("redAlliance: "+redAlliance);
-		System.out.println("dropGear: "+dropGear);
-		System.out.println("positon: "+position);
+		System.out.println("redAlliance: " + redAlliance);
+		System.out.println("dropGear: " + dropGear);
+		System.out.println("positon: " + position);
 
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)
 		oiSubsystem.mapButtons();
@@ -195,14 +208,14 @@ public class Robot extends IterativeRobot {
 
 		//Activate the compressor if its module number is in the map.
 		if (cfg.hasModule()) {
-			System.out.println("Setting up a compressor at module number "+cfg.getModule());
+			System.out.println("Setting up a compressor at module number " + cfg.getModule());
 			Compressor compressor = new Compressor(cfg.getModule());
 			compressor.setClosedLoopControl(true);
 			compressor.start();
 			System.out.println(compressor.enabled());
 		}
 
-		if(cfg.getDoMP()) {
+		if (cfg.getDoMP()) {
 			WHEEL_DIAMETER = cfg.getWheelDiameterInches() / 12.;
 			timeToPushGear = (long) (cfg.getTimeToPushGear() * 1000);
 
@@ -210,14 +223,16 @@ public class Robot extends IterativeRobot {
 			rightProfiles = new HashMap<>();
 
 			for (MotionProfileMap.MotionProfile profile : cfg.getLeftMotionProfileList()) {
-				leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+				leftProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile
+						.getFilename(), profile.getInverted()));
 			}
 
 			for (MotionProfileMap.MotionProfile profile : cfg.getRightMotionProfileList()) {
-				rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile.getFilename(), profile.getInverted()));
+				rightProfiles.put(profile.getName(), new MotionProfileData("/home/lvuser/449_resources/" + profile
+						.getFilename(), profile.getInverted()));
 			}
 
-			if(cfg.getTestMP()){
+			if (cfg.getTestMP()) {
 				MPLoader.loadTopLevel(leftProfiles.get("test"), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 				MPLoader.loadTopLevel(rightProfiles.get("test"), driveSubsystem.rightMaster, WHEEL_DIAMETER);
 			} else {
@@ -249,12 +264,13 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.leftMaster.canTalon.enable();
 		driveSubsystem.rightMaster.canTalon.enable();
 
-		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem, oiSubsystem));
+		driveSubsystem.setDefaultCommandManual(new DefaultArcadeDrive(driveSubsystem.straightPID, driveSubsystem,
+				oiSubsystem));
 
-//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
+		//		Scheduler.getInstance().add(new PIDTest(driveSubsystem));
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (cfg.getStartLowGear()){
+			if (cfg.getStartLowGear()) {
 				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 			} else {
 				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
@@ -265,7 +281,7 @@ public class Robot extends IterativeRobot {
 			Scheduler.getInstance().add(new IntakeUp(intakeSubsystem));
 		}
 
-		if(gearSubsystem != null){
+		if (gearSubsystem != null) {
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
 
@@ -300,9 +316,10 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putBoolean("Shooter Running", singleFlywheelShooterSubsystem.spinning);
 			SmartDashboard.putNumber("Shooter Speed", singleFlywheelShooterSubsystem.talon.getSpeed());
 			SmartDashboard.putNumber("Shooter Error", singleFlywheelShooterSubsystem.talon.getError());
-			SmartDashboard.putNumber("Shooter Current", singleFlywheelShooterSubsystem.talon.canTalon.getOutputCurrent());
+			SmartDashboard.putNumber("Shooter Current", singleFlywheelShooterSubsystem.talon.canTalon.getOutputCurrent
+					());
 		}
-		if(gearSubsystem != null) {
+		if (gearSubsystem != null) {
 			SmartDashboard.putBoolean("Gear Open", gearSubsystem.contracted);
 		}
 		Scheduler.getInstance().run();
@@ -316,14 +333,14 @@ public class Robot extends IterativeRobot {
 		//Set throttle to 0 for safety reasons
 		//Switch to low gear if we have gears
 		if (driveSubsystem.shifter != null) {
-			if (cfg.getStartLowGear()){
+			if (cfg.getStartLowGear()) {
 				Scheduler.getInstance().add(new SwitchToLowGear(driveSubsystem));
 			} else {
 				Scheduler.getInstance().add(new SwitchToHighGear(driveSubsystem));
 			}
 		}
 
-		if(gearSubsystem != null){
+		if (gearSubsystem != null) {
 			Scheduler.getInstance().add(new FirePiston(gearSubsystem, DoubleSolenoid.Value.kForward));
 		}
 
@@ -332,7 +349,7 @@ public class Robot extends IterativeRobot {
 		driveSubsystem.setVBusThrottle(0, 0);
 
 		if (cfg.getDoMP()) {
-			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()){
+			if (singleFlywheelShooterSubsystem != null && !cfg.getTestMP()) {
 				Scheduler.getInstance().add(new AccelerateFlywheel(singleFlywheelShooterSubsystem, 20));
 			}
 			Scheduler.getInstance().add(new ExecuteProfile(talons, 15, driveSubsystem));
@@ -357,7 +374,7 @@ public class Robot extends IterativeRobot {
 				}
 
 			}
-		}else {
+		} else {
 			Scheduler.getInstance().add(new PIDTest(driveSubsystem, cfg.getDriveBackTime()));
 		}
 	}
@@ -391,7 +408,7 @@ public class Robot extends IterativeRobot {
 					} else if (position.equals("left") && !redAlliance) {
 						loadProfile("blue_shoot");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
-					} else if (redAlliance){
+					} else if (redAlliance) {
 						loadProfile("red_backup");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 					} else {
@@ -399,9 +416,12 @@ public class Robot extends IterativeRobot {
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 					}
 				} else if (completedCommands == 3) {
-					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) && singleFlywheelShooterSubsystem != null) {
-						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem, feederSubsystem));
-					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance))) {
+					if (((position.equals("right") && redAlliance) || (position.equals("left") && !redAlliance)) &&
+							singleFlywheelShooterSubsystem != null) {
+						Scheduler.getInstance().add(new FireShooter(singleFlywheelShooterSubsystem, intakeSubsystem,
+								feederSubsystem));
+					} else if (!((position.equals("right") && redAlliance) || (position.equals("left") &&
+							!redAlliance))) {
 						loadProfile("forward");
 						Scheduler.getInstance().add(new ExecuteProfile(talons, 10, driveSubsystem));
 					}
@@ -411,11 +431,11 @@ public class Robot extends IterativeRobot {
 	}
 
 	@Override
-	public void disabledInit(){
+	public void disabledInit() {
 		driveSubsystem.setVBusThrottle(0, 0);
 	}
 
-	private void loadProfile(String name){
+	private void loadProfile(String name) {
 		MPNotifier.stop();
 		MPLoader.loadTopLevel(leftProfiles.get(name), driveSubsystem.leftMaster, WHEEL_DIAMETER);
 		MPLoader.loadTopLevel(rightProfiles.get(name), driveSubsystem.rightMaster, WHEEL_DIAMETER);
