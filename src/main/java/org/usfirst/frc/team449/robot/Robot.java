@@ -10,11 +10,13 @@ import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDr
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.PIDTest;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.SwitchToLowGear;
+import org.usfirst.frc.team449.robot.mechanism.catapult.Catapult;
 import org.usfirst.frc.team449.robot.mechanism.climber.ClimberSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.feeder.FeederSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.Intake2017;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.updown.IntakeUp;
 import org.usfirst.frc.team449.robot.mechanism.intake.IntakeSubsystem;
+import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.Intake2014;
 import org.usfirst.frc.team449.robot.mechanism.pneumatics.PneumaticsSubsystem;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.SingleFlywheelShooter;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
@@ -67,6 +69,10 @@ public class Robot extends IterativeRobot {
 	 */
 	public static FeederSubsystem feederSubsystem;
 
+	public static Intake2014 intake2014;
+
+	public static Catapult catapult;
+
 	/**
 	 * The object constructed directly from map.cfg.
 	 * */
@@ -80,9 +86,9 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
 			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
+			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
 					Robot2017Map.Robot2017.newBuilder());
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
@@ -128,6 +134,14 @@ public class Robot extends IterativeRobot {
 		//Construct feeder if it's in the map.
 		if (cfg.hasFeeder()) {
 			feederSubsystem = new FeederSubsystem(cfg.getFeeder());
+		}
+
+		if (cfg.hasBigIntake()) {
+			intake2014 = new Intake2014(cfg.getBigIntake());
+		}
+
+		if(cfg.hasCatapult()){
+			catapult = new Catapult(cfg.getCatapult());
 		}
 
 		//Map the buttons (has to be done last because all the subsystems need to have been instantiated.)

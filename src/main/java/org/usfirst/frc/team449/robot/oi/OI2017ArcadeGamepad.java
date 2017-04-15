@@ -13,7 +13,13 @@ import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntakeUpDown;
 import org.usfirst.frc.team449.robot.mechanism.intake.Intake2017.commands.ToggleIntaking;
+import org.usfirst.frc.team449.robot.mechanism.intake.commands.IntakeIn;
+import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.IntakeSpinIn;
+import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.IntakeSpinOut;
+import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.IntakeStop;
+import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.ToggleUpDown;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.catapult.LaunchBall;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.RackShooter;
@@ -135,6 +141,16 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	private Button fireShooter;
 
+	private Button launchBall;
+
+	private Button toggleUpDown;
+
+	private Button intakeIn;
+
+	private Button intakeOut;
+
+	private Button intakeStop;
+
 	/**
 	 * Construct the OI2017ArcadeGamepad
 	 *
@@ -215,6 +231,21 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if (map.hasSwitchCamera()) {
 			switchCamera = new MappedJoystickButton(map.getSwitchCamera());
+		}
+		if(map.hasLaunch()){
+			launchBall = new MappedJoystickButton(map.getLaunch());
+		}
+		if(map.hasBallIntakeIn()){
+			intakeIn = new MappedJoystickButton(map.getBallIntakeIn());
+		}
+		if(map.hasBallIntakeOut()){
+			intakeOut = new MappedJoystickButton(map.getBallIntakeOut());
+		}
+		if(map.hasBallIntakeStop()){
+			intakeStop = new MappedJoystickButton(map.getBallIntakeStop());
+		}
+		if(map.hasToggleUpDown()){
+			toggleUpDown = new MappedJoystickButton(map.getToggleUpDown());
 		}
 	}
 
@@ -345,6 +376,23 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if (fireShooter != null) {
 			fireShooter.whenPressed(new FireShooter(Robot.singleFlywheelShooterSubsystem, Robot.intakeSubsystem, Robot
 					.feederSubsystem));
+		}
+		if(launchBall != null){
+			launchBall.whenPressed(new LaunchBall(Robot.catapult,Robot.intake2014));
+		}
+		if(intakeStop != null){
+			intakeStop.whileHeld(new IntakeStop(Robot.intake2014));
+		}
+		if(intakeIn != null){
+			intakeIn.whileHeld(new IntakeSpinIn(Robot.intake2014));
+			intakeIn.whenPressed(new IntakeStop(Robot.intake2014));
+		}
+		if(intakeOut != null){
+			intakeOut.whileHeld(new IntakeSpinOut(Robot.intake2014));
+			intakeOut.whenReleased(new IntakeStop(Robot.intake2014));
+		}
+		if(toggleUpDown != null){
+			toggleUpDown.whenPressed(new ToggleUpDown(Robot.intake2014));
 		}
 	}
 }
