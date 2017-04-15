@@ -5,6 +5,7 @@ import edu.wpi.cscore.UsbCamera;
 import maps.org.usfirst.frc.team449.robot.components.UsbCameraMap;
 import maps.org.usfirst.frc.team449.robot.vision.CameraMap;
 import org.usfirst.frc.team449.robot.MappedSubsystem;
+import org.usfirst.frc.team449.robot.vision.autovision.gen.GripPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,8 @@ public class CameraSubsystem extends MappedSubsystem {
 	 */
 	public CameraMap.Camera map;
 
+	public GripPipeline pipeline;
+
 	/**
 	 * Construct a CameraSubsystem
 	 * @param map The config map
@@ -41,6 +44,8 @@ public class CameraSubsystem extends MappedSubsystem {
 	public CameraSubsystem(CameraMap.Camera map) {
 		super(map);
 		this.map = map;
+
+		pipeline = new GripPipeline();
 
 		//Logging to SmartDashboard
 		System.out.println("CameraSubsystem construct start");
