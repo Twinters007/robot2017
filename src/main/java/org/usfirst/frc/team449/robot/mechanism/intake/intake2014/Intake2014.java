@@ -21,7 +21,7 @@ public class Intake2014 extends MappedSubsystem {
 		motor = new VictorSP(map.getMotor().getPort());
 		motor.setInverted(map.getMotor().getInverted());
 
-		solenoid = new DoubleSolenoid(map.getSolenoid().getForward(), map.getSolenoid().getReverse());
+		solenoid = new DoubleSolenoid(map.getPistonModuleNum(),map.getSolenoid().getForward(), map.getSolenoid().getReverse());
 	}
 
 	public void intakeSpinIn(){

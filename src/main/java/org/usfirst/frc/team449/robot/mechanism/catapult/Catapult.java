@@ -14,7 +14,7 @@ public class Catapult extends MappedSubsystem {
 
 	public Catapult(maps.org.usfirst.frc.team449.robot.mechanism.catapult.CatapultMap.Catapult map){
 		super(map.getMechanism());
-		solenoid = new Solenoid(map.getSolenoid().getPort());
+		solenoid = new Solenoid(15,map.getSolenoid().getPort());
 		timeUp = map.getTimeUp();
 	}
 

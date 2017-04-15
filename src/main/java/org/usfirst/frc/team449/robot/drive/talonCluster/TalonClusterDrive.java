@@ -12,6 +12,7 @@ import org.usfirst.frc.team449.robot.components.RotPerSecCANTalonSRX;
 import org.usfirst.frc.team449.robot.drive.DriveSubsystem;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.DefaultArcadeDrive;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ExecuteProfile;
+import org.usfirst.frc.team449.robot.drive.talonCluster.commands.OpArcadeDrive;
 import org.usfirst.frc.team449.robot.oi.OI2017ArcadeGamepad;
 
 import java.io.FileWriter;
@@ -282,8 +283,8 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 	 */
 	public void setDefaultThrottle(double left, double right) {
 		//Clip to one to avoid anything strange.
-		setPIDThrottle(clipToOne(left), clipToOne(right));
-		//setVBusThrottle(left, right);
+//		setPIDThrottle(clipToOne(left), clipToOne(right));
+		setVBusThrottle(left, right);
 	}
 
 	/**
@@ -421,7 +422,7 @@ public class TalonClusterDrive extends DriveSubsystem implements NavxSubsystem {
 		//Start overriding the NavX.
 		overrideNavX = false;
 		//Start driving
-		setDefaultCommand(new DefaultArcadeDrive(straightPID, this, oi));
+		setDefaultCommand(new OpArcadeDrive(this, oi));
 	}
 
 	/**

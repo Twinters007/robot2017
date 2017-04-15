@@ -86,10 +86,9 @@ public class Robot extends IterativeRobot {
 
 		try {
 			//Try to construct map from the cfg file
-			cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/final_map.cfg",
-			//cfg = (Robot2017Map.Robot2017) MappedSubsystem.readConfig("/home/lvuser/449_resources/fancy_map.cfg",
-					Robot2017Map.Robot2017.newBuilder());
+			cfg = (Robot2017Map.Robot2017) (MappedSubsystem.readConfig("/home/lvuser/449_resources/balbasaur_map.cfg",
+					Robot2017Map.Robot2017.newBuilder()));
+			SmartDashboard.putBoolean("cfg", cfg != null);
 		} catch (IOException e) {
 			//This is either the map file not being in the file system OR it being improperly formatted.
 			System.out.println("Config file is bad/nonexistent!");
@@ -149,11 +148,14 @@ public class Robot extends IterativeRobot {
 		System.out.println("Mapped buttons");
 
 		//Activate the compressor if its module number is in the map.
-		if (cfg.hasModule()) {
-			Compressor compressor = new Compressor(cfg.getModule());
-			compressor.setClosedLoopControl(true);
-			compressor.start();
-		}
+
+
+		Compressor compressor = new Compressor(cfg.getModule());
+		compressor.setClosedLoopControl(true);
+		compressor.start();
+		SmartDashboard.putBoolean("compressor on",compressor.enabled());
+
+
 	}
 
 	/**
