@@ -14,18 +14,13 @@ public class FireCatapult extends ReferencingCommand {
 	public FireCatapult(Catapult catapult){
 		super(catapult);
 		requires(catapult);
-		timeUp = catapult.timeUp;
 	}
 
 	protected void initialize(){
-		timeFired = System.currentTimeMillis();
 		((Catapult)subsystem).setFired(true);
 	}
 
 	protected void execute(){
-		if(System.currentTimeMillis()-timeFired>timeUp && ((Catapult)subsystem).isFired()){
-			((Catapult)subsystem).setFired(false);
-		}
 	}
 
 	protected void end(){

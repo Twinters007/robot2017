@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.Intake2014;
 
@@ -14,6 +15,7 @@ public class IntakeSpinOut extends ReferencingCommand {
 	}
 
 	protected void initialize(){
+		SmartDashboard.putString("Intake state","out");
 		((Intake2014) subsystem).intakeSpinOut();
 	}
 

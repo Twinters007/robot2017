@@ -378,17 +378,17 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 					.feederSubsystem));
 		}
 		if(launchBall != null){
-			launchBall.whenPressed(new LaunchBall(Robot.catapult,Robot.intake2014));
+			launchBall.whileHeld(new LaunchBall(Robot.catapult,Robot.intake2014));
 		}
 		if(intakeStop != null){
-			intakeStop.whileHeld(new IntakeStop(Robot.intake2014));
+			intakeStop.whenPressed(new IntakeStop(Robot.intake2014));
 		}
 		if(intakeIn != null){
-			intakeIn.whileHeld(new IntakeSpinIn(Robot.intake2014));
-			intakeIn.whenPressed(new IntakeStop(Robot.intake2014));
+			intakeIn.whenPressed(new IntakeSpinIn(Robot.intake2014));
+			intakeIn.whenReleased(new IntakeStop(Robot.intake2014));
 		}
 		if(intakeOut != null){
-			intakeOut.whileHeld(new IntakeSpinOut(Robot.intake2014));
+			intakeOut.whenPressed(new IntakeSpinOut(Robot.intake2014));
 			intakeOut.whenReleased(new IntakeStop(Robot.intake2014));
 		}
 		if(toggleUpDown != null){
