@@ -89,7 +89,7 @@ public class GripPipeline {
 	 * @param hue The min and max hue
 	 * @param sat The min and max saturation
 	 * @param val The min and max value
-	 * @param output The image in which to store the output.
+	 * @param out The image in which to store the output.
 	 */
 	private void hsvThreshold(Mat input, double[] hue, double[] sat, double[] val,
 	    Mat out) {
@@ -188,7 +188,7 @@ public class GripPipeline {
 	 */
 	private void findLines(Mat input, ArrayList<Line> lineList) {
 		final LineSegmentDetector lsd = Imgproc.createLineSegmentDetector();
-		final Mat lines = new Mat();
+		final MatOfFloat4 lines = new MatOfFloat4();
 		lineList.clear();
 		if (input.channels() == 1) {
 			lsd.detect(input, lines);

@@ -24,10 +24,10 @@ public class AutoVision {
 	public static VPoint getOffsets() {
 		VideoCapture vc = new VideoCapture();
 		vc.open(0);
-
 		Mat frame = new Mat();
-		vc.retrieve(frame);
-
+		while (frame.empty()) {
+			vc.retrieve(frame);
+		}
 		GripPipeline gp = new GripPipeline();
 
 		gp.process(frame);
