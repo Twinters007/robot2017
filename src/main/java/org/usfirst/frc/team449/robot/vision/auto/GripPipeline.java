@@ -30,7 +30,6 @@ public class GripPipeline {
     private Mat hsvThresholdOutput = new Mat();
     private Mat blurOutput = new Mat();
     private ArrayList<Line> findLinesOutput = new ArrayList<Line>();
-    private ArrayList<Line> filterLinesOutput = new ArrayList<Line>();
 
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -47,9 +46,9 @@ public class GripPipeline {
 
         // Step HSV_Threshold0:
         Mat hsvThresholdInput = cvCvtcolorOutput;
-        double[] hsvThresholdHue = {168.0, 172.0};
-        double[] hsvThresholdSaturation = {253.0, 255.0};
-        double[] hsvThresholdValue = {253.0, 255.0};
+        double[] hsvThresholdHue = {168.34532374100723, 173.8879456706282};
+        double[] hsvThresholdSaturation = {252.24820143884895, 255.0};
+        double[] hsvThresholdValue = {249.955035971223, 255.0};
         hsvThreshold(hsvThresholdInput, hsvThresholdHue, hsvThresholdSaturation, hsvThresholdValue, hsvThresholdOutput);
 
         // Step Blur0:
@@ -94,14 +93,6 @@ public class GripPipeline {
      */
     public ArrayList<Line> findLinesOutput() {
         return findLinesOutput;
-    }
-
-    /**
-     * This method is a generated getter for the output of a Filter_Lines.
-     * @return ArrayList<Line> output from Filter_Lines.
-     */
-    public ArrayList<Line> filterLinesOutput() {
-        return filterLinesOutput;
     }
 
 
