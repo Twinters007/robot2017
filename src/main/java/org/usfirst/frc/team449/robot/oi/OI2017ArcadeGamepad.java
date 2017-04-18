@@ -49,6 +49,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 */
 	private Throttle fwdThrottle;
 
+	private Throttle fwdThrottle0;
+	private Throttle fwdThrottle1;
+
 	/**
 	 * The controller with the drive sticks
 	 */
@@ -247,6 +250,11 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if(map.hasToggleUpDown()){
 			toggleUpDown = new MappedJoystickButton(map.getToggleUpDown());
 		}
+
+
+		fwdThrottle0 = new SmoothedThrottle(gamepad, 3, false);
+		fwdThrottle1 = new SmoothedThrottle(gamepad, 2, false);
+
 	}
 
 	/**
@@ -256,12 +264,16 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
 	public double getFwd() {
+		double fwd = fwdThrottle0.getValue() - fwdThrottle1.getValue();
+
 		//If the value is outside of the deadband
-		if (Math.abs(fwdThrottle.getValue()) > deadband) {
+		if (Math.abs(fwd) > deadband) {
 			//TODO put this number in the map
 			final double ROT_SCALE = 0.2;
 			//Scale based on rotational throttle for more responsive turning at high speed
-			return fwdThrottle.getValue() * (1 - ROT_SCALE * rotThrottle.getValue());
+
+
+			return fwd * (1 - ROT_SCALE * rotThrottle.getValue());
 		} else {
 			return 0;
 		}
