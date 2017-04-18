@@ -1,13 +1,13 @@
 syntax = "proto2";
 
 import "org/usfirst/frc/team449/robot/mechanism/Mechanism.proto";
-import "org/usfirst/frc/team449/robot/components/SingleSolenoid.proto";
+import "org/usfirst/frc/team449/robot/components/DoubleSolenoid.proto";
 
 option java_package = "maps.org.usfirst.frc.team449.robot.mechanism.catapult";
 option java_outer_classname = "CatapultMap";
 
 message Catapult {
 	required Mechanism mechanism = 1;
-    required SingleSolenoid solenoid = 2;
+    required DoubleSolenoid solenoid = 2;
     required int32 time_up = 3;    //How long to wait after firing before turning off the solenoid
 }

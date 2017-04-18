@@ -8,6 +8,7 @@ import org.usfirst.frc.team449.robot.Robot;
 import org.usfirst.frc.team449.robot.components.TriggerButton;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.*;
 import org.usfirst.frc.team449.robot.drive.talonCluster.commands.ois.ArcadeOI;
+import org.usfirst.frc.team449.robot.mechanism.catapult.commands.ReleaseCatapult;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.CurrentClimb;
 import org.usfirst.frc.team449.robot.mechanism.climber.commands.StopClimbing;
 import org.usfirst.frc.team449.robot.mechanism.feeder.commands.ToggleFeeder;
@@ -264,16 +265,16 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 	 * @return The processed stick output, sign-adjusted so 1 is forward and -1 is backwards.
 	 */
 	public double getFwd() {
-		double fwd = fwdThrottle0.getValue() - fwdThrottle1.getValue();
+		//double fwd = fwdThrottle0.getValue() - fwdThrottle1.getValue();
 
 		//If the value is outside of the deadband
-		if (Math.abs(fwd) > deadband) {
+		if (Math.abs(fwdThrottle.getValue()) > deadband) {
 			//TODO put this number in the map
 			final double ROT_SCALE = 0.2;
 			//Scale based on rotational throttle for more responsive turning at high speed
 
 
-			return fwd * (1 - ROT_SCALE * rotThrottle.getValue());
+			return fwdThrottle.getValue() * (1 - ROT_SCALE * rotThrottle.getValue());
 		} else {
 			return 0;
 		}
@@ -390,7 +391,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 					.feederSubsystem));
 		}
 		if(launchBall != null){
-			launchBall.whileHeld(new LaunchBall(Robot.catapult,Robot.intake2014));
+			launchBall.whenPressed(new LaunchBall(Robot.catapult,Robot.intake2014));
+			launchBall.whenReleased(new ReleaseCatapult(Robot.catapult));
 		}
 		if(intakeStop != null){
 			intakeStop.whenPressed(new IntakeStop(Robot.intake2014));

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team449.robot.mechanism.catapult.commands;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team449.robot.ReferencingCommand;
 import org.usfirst.frc.team449.robot.mechanism.catapult.Catapult;
 
@@ -17,14 +18,14 @@ public class FireCatapult extends ReferencingCommand {
 	}
 
 	protected void initialize(){
-		((Catapult)subsystem).setFired(true);
+		((Catapult)subsystem).setFired(DoubleSolenoid.Value.kForward);
 	}
 
 	protected void execute(){
 	}
 
 	protected void end(){
-		((Catapult) subsystem).setFired(false); //Make sure shooter is down
+		((Catapult) subsystem).setFired(DoubleSolenoid.Value.kForward); //Make sure shooter is down
 	}
 
 	protected boolean isFinished(){
