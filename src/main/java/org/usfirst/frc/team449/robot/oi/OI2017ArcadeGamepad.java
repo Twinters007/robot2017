@@ -20,6 +20,7 @@ import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.Intake
 import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.IntakeStop;
 import org.usfirst.frc.team449.robot.mechanism.intake.intake2014.commands.ToggleUpDown;
 import org.usfirst.frc.team449.robot.mechanism.singleflywheelshooter.commands.ToggleShooter;
+import org.usfirst.frc.team449.robot.mechanism.topcommands.EstopRobot;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.catapult.LaunchBall;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.FireShooter;
 import org.usfirst.frc.team449.robot.mechanism.topcommands.shooter.LoadShooter;
@@ -155,6 +156,8 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 
 	private Button intakeStop;
 
+	private Button estop;
+
 	/**
 	 * Construct the OI2017ArcadeGamepad
 	 *
@@ -251,7 +254,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		if(map.hasToggleUpDown()){
 			toggleUpDown = new MappedJoystickButton(map.getToggleUpDown());
 		}
-
+		if(map.hasEstop()){
+			estop = new MappedJoystickButton(map.getEstop());
+		}
 
 		fwdThrottle0 = new SmoothedThrottle(gamepad, 3, false);
 		fwdThrottle1 = new SmoothedThrottle(gamepad, 2, false);
@@ -407,6 +412,9 @@ public class OI2017ArcadeGamepad extends BaseOI implements ArcadeOI {
 		}
 		if(toggleUpDown != null){
 			toggleUpDown.whenPressed(new ToggleUpDown(Robot.intake2014));
+		}
+		if(estop != null){
+			estop.whenPressed(new EstopRobot());
 		}
 	}
 }

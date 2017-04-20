@@ -50,4 +50,5 @@ message OI2017ArcadeGamepad {
     optional JoystickButton toggle_up_down = 32;
     optional JoystickButton ball_intake_out = 33;
     optional JoystickButton ball_intake_stop = 36;
+    optional JoystickButton estop = 37;
 }
